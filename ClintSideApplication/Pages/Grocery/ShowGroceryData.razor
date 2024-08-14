@@ -1,0 +1,49 @@
+﻿@page "/GrosoryList"
+@using ModelClasses
+@inject HttpClient _http
+
+<h3>ShowGroceryData</h3>
+<a class="btn btn-primary" href="/AddGrosoryList">Add Grocery</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Item Id</th>
+            <th>Item Name</th>
+            <th>Item Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (_allGrocery.Count == 0)
+        {
+            <tr>
+                <td colspan="3">No Record Found Yet</td>
+            </tr>
+        } else {
+            @foreach (var item in _allGrocery)
+            {
+                <tr>
+                    <td>@item.Item_Id</td>
+                    <td>@item.Item_Name</td>
+                    <td>@item.Item_Price</td>
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<GroceryList> _allGrocery = new List<GroceryList>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllDataAsync();
+    }
+
+    private async Task GetAllDataAsync()
+    {
+        _allGrocery = await _http.GetFromJsonAsync<List<GroceryList>>("Grocery");
+    }
+}
+

@@ -1,0 +1,44 @@
+﻿@page "/AddGrosoryList"
+@using ModelClasses
+@inject HttpClient _http
+@inject NavigationManager _navigation
+
+<h3>AddGroceryList</h3>
+
+<div class="w-50">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" placeholder="Item Name" @bind="_grocery.Item_Name">
+        <label for="floatingInput">Item Name</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="number" class="form-control" id="floatingInput" placeholder="0.00" @bind="_grocery.Item_Price">
+        <label for="floatingInput">Item Price</label>
+    </div>
+</div>
+<button @onclick="AddGroceryData">Add</button>
+
+@code {
+    private GroceryList _grocery = new GroceryList();
+
+    private async Task AddGroceryData()
+    {
+        _grocery.Action_Status = "ADD";
+        _grocery.Make_By = "monaem.khan";
+        _grocery.Item_Id = "";
+        _grocery.Make_Date = "";
+
+        var responce = await _http.PostAsJsonAsync("Grocery", _grocery);
+        var err_msg = await responce.Content.ReadAsStringAsync();
+
+        if (err_msg == "null" || string.IsNullOrEmpty(err_msg))
+        {
+            _grocery = new GroceryList();
+            _navigation.NavigateTo("/GrosoryList");
+        }
+        else
+        {
+            Console.WriteLine(err_msg);
+        }
+
+    }
+}
