@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbConnection>(options =>
 
 builder.Services.AddScoped<IGroceryService, GroceryService>();
 builder.Services.AddScoped<IAuthorizerGroupService,AuthorizerGroupService>();
+builder.Services.AddScoped<IDesignationService, DesignationService>();
 
 builder.Services.AddCors(options =>
 {
