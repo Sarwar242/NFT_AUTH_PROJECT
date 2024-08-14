@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ServerSideApplication.DbConnection;
 using ServerSideApplication.Service;
+using ServerSideApplication.Service.AuthorizerGroup;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<AppDbConnection>(options =>
 });
 
 builder.Services.AddScoped<IGroceryService, GroceryService>();
+builder.Services.AddScoped<IAuthorizerGroupService,AuthorizerGroupService>();
 builder.Services.AddScoped<IDesignationService, DesignationService>();
 
 builder.Services.AddCors(options =>
