@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClintSideApplication", "Cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerSideApplication", "ServerSideApplication\ServerSideApplication.csproj", "{7D3EECA4-2EFB-4F79-9894-D8DDEB9B20D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelClasses", "ModelClasses\ModelClasses.csproj", "{5B91552E-EAA9-43A1-A285-85268F0024CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelClasses", "ModelClasses\ModelClasses.csproj", "{5B91552E-EAA9-43A1-A285-85268F0024CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
