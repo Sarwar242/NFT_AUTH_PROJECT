@@ -1,0 +1,91 @@
+﻿@page "/designation"
+
+@inject NavigationManager NavManager
+@inject HttpClient _http
+
+<PageTitle>Designations</PageTitle>
+<h3>Add Designation</h3>
+<EditForm Model="Model" OnValidSubmit="Submit" FormName="customer-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label>
+        Designation Name:
+        <InputText @bind-Value="Model!.Designation_Name" />
+    </label>
+    <label>
+        Designation Priority:
+        <InputText @bind-Value="Model!.Designation_Priority" />
+    </label>
+
+    <button type="submit">Submit</button>
+    <button type="button" @onclick="Back">Cancel</button>
+</EditForm>
+
+<br />
+<h1>Designations</h1>
+@if (designations == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Designation Id</th>
+                <th>Designation Name</th>
+                <th>Designation Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var designation in designations!)
+            {
+                <tr>
+                    <td>@designation.Designation_Id</td>
+                    <td>@designation.Designation_Name</td>
+                    <td>@designation.Designation_Priority</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [SupplyParameterFromForm]
+    public DesignationModel? Model { get; set; }
+    private List<DesignationModel>? designations;
+    protected override void OnInitialized() => Model ??= new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+        designations = await _http.GetFromJsonAsync<List<DesignationModel>>("api/Designation");
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            var responce = await _http.PostAsJsonAsync("api/Designation", Model);
+            var err_msg = await responce.Content.ReadAsStringAsync();
+
+            if (err_msg == "null" || string.IsNullOrEmpty(err_msg))
+            {
+                NavManager.NavigateTo("/designation", true);
+            }
+            else
+            {
+                Console.WriteLine(err_msg);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    public void Back()
+    {
+        NavManager.NavigateTo("/", true);
+    }
+}
