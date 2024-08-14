@@ -1,0 +1,195 @@
+﻿@page "/"
+@using ModelClasses.AuthorizerGroup
+@inject HttpClient _http
+
+<fieldset style="width:50%">
+    <legend>Authorizer Group</legend>
+    <table class="table" width="100%">
+        <tbody>
+            <tr>
+                <td>
+                    <label>Authorizer Group ID</label>
+                </td>
+                <td>
+                    :
+                </td>
+                <td>
+                    <input style="width:50px;" placeholder="[AUTO]" @bind="_authGroup.group_id" 
+                    @bind:event="oninput" @onchange="GetAuthorizerGroupData" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Authorizer Serial No.</label>
+                </td>
+                <td>
+                    :
+                </td>
+                <td>
+                    <input style="width:50px;" @bind="_authGroup.authrizer_sl_no"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Authorizer Group Name</label>
+                </td>
+                <td>
+                    :
+                </td>
+                <td>
+                    <input style="width:100%" @bind="_authGroup.group_nm" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Authorizer DesigNation</label>
+                </td>
+                <td>
+                    :
+                </td>
+                <td>
+                    <select style="width:100%; height:25px;" @bind="_authGroup.designation_nm">
+                        <option value="">Select Designation</option>
+                        @foreach (var _desig in designation)
+                        {
+                            <option value="@_desig">@_desig</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <input type="checkbox" @bind="isOverride" />
+                    <label>Authorizer Can Override</label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+
+<button class="btn btn-primary" @onclick="AddAuthorizerGrpToTable">Add</button>
+
+    <fieldset style="width:50%">
+        <table class="table table-hover" width="100%">
+            <thead>
+                <tr>
+                    <th>Authorizer Sl No.</th>
+                    <th>Authorizer Designation</th>
+                    <th>Override Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var authGr in _authorizersGroup)
+                {
+                    <tr>
+                        <td>@authGr.authrizer_sl_no</td>
+                        <td>@authGr.designation_nm</td>
+                        <td>
+                            @if (authGr.desig_override_auth_flag == 1)
+                            {
+                                <span>Yes</span>
+                            }
+                            else
+                            {
+                                <span>No</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </fieldset>
+
+    <button class="btn btn-primary" @onclick="InsertDataIntoTable">Ok</button>
+    <button class="btn btn-primary ms-2" @onclick="refreshBtnClick">Refresh</button>
+
+
+
+@code {
+    private List<AuthorizerGroupModel> _authorizersGroup = new List<AuthorizerGroupModel>();
+    private AuthorizerGroupModel _authGroup = new AuthorizerGroupModel();
+
+    private List<string> designation = new List<string>();
+
+    private string _action = "ADD";
+
+    private Boolean isOverride = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetDesignation();
+        _action = "ADD";
+    }
+
+    private async Task GetDesignation()
+    {
+        designation = await _http.GetFromJsonAsync<List<string>>("AuthorizerGroup/GetDesignation");
+    }
+
+    private async Task GetAuthorizerGroupData()
+    {
+        _authorizersGroup = await _http.GetFromJsonAsync<List<AuthorizerGroupModel>>("AuthorizerGroup/GetAuthorizerGroup?group_id=" + _authGroup.group_id);
+
+        if(_authorizersGroup.Count > 0)
+        {
+            var index = _authorizersGroup.Count-1;
+            _authGroup.group_nm = _authorizersGroup[index].group_nm;
+            _authGroup.group_id = _authorizersGroup[index].group_id;
+            _authGroup.authrizer_sl_no = index + 2;
+            foreach(var item in _authorizersGroup)
+            {
+                item.last_action = "EDT";
+            }
+        }
+    }
+
+    private void AddAuthorizerGrpToTable()
+    {
+        int isOverridechk = 0;
+        if (isOverride)
+        {
+            isOverridechk = 1;
+        }
+        _authorizersGroup.Add(new AuthorizerGroupModel
+        {
+                group_id = Convert.ToInt32(_authGroup.group_id),
+                group_nm = _authGroup.group_nm,
+                designation_nm = _authGroup.designation_nm,
+                authrizer_sl_no = Convert.ToInt32(_authGroup.authrizer_sl_no),
+                desig_override_auth_flag = isOverridechk,
+                make_by = "Monaem.khan",
+                last_action = "ADD"
+        });
+
+        var temp = _authGroup.authrizer_sl_no;
+        var temp2 = _authGroup.group_nm;
+        _authGroup = new AuthorizerGroupModel();
+
+        _authGroup.authrizer_sl_no = temp + 1;
+        _authGroup.group_nm = temp2;
+        isOverride = false;
+    }
+
+    private void refreshBtnClick()
+    {
+        _authorizersGroup = new();
+        _authGroup = new();
+        _action = "ADD";
+        isOverride = false;
+    }
+
+    private async Task InsertDataIntoTable()
+    {
+        var responce = await _http.PostAsJsonAsync<List<AuthorizerGroupModel>>("AuthorizerGroup/InsertGroup", _authorizersGroup);
+        var err_msg = await responce.Content.ReadAsStringAsync();
+
+        if (err_msg == "null" || string.IsNullOrEmpty(err_msg))
+        {
+            refreshBtnClick();
+        }
+    }
+}
