@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using ServerSideApplication.DbConnection;
 using ServerSideApplication.Service;
+<<<<<<< HEAD
 using ServerSideApplication.Service.EmployeeProfile;
+=======
+using ServerSideApplication.Service.AuthorizerGroup;
+>>>>>>> dev
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +22,7 @@ builder.Services.AddDbContext<AppDbConnection>(options =>
 });
 
 builder.Services.AddScoped<IGroceryService, GroceryService>();
+builder.Services.AddScoped<IAuthorizerGroupService,AuthorizerGroupService>();
 builder.Services.AddScoped<IDesignationService, DesignationService>();
 builder.Services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
 
