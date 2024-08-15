@@ -1,8 +1,9 @@
 ﻿@page "/AddAuthorizerGroup"
 @using ModelClasses.AuthorizerGroup
 @inject HttpClient _http
+<link href="PopUpStyle.css" rel="stylesheet" />
 
-<fieldset style="width:50%">
+<fieldset style="width:50%" >
     <legend>Authorizer Group</legend>
     <table class="table" width="100%">
         <tbody>
@@ -15,7 +16,8 @@
                 </td>
                 <td>
                     <input style="width:50px;" placeholder="[AUTO]" @bind="_authGroup.group_id" 
-                    @bind:event="oninput" @onchange="GetAuthorizerGroupData" />
+                    @bind:event="oninput" @onchange="GetAuthorizerGroupData" 
+                    @ondblclick="ShowPopUp"/>
                 </td>
             </tr>
 
@@ -109,6 +111,50 @@
 
 
 
+   @* popup view *@
+
+@if (isPopUpShow)
+{
+    <div id="popUpBox">
+        <div id="popUpContent">
+            <div id="popUpTitle">
+                <div>
+                    <div id="popUpTitle_header">Authorizer Group List</div>
+                    <div id="popUpTitle_close" @onclick="CloseModal"><button>X</button></div>
+                </div>
+            </div>
+            <div id="popUpBody">
+                <div>
+                    <table class="table table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Authorizer Group Id</th>
+                                <th>Authorizer Group Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var authGr in _authAllGroupAuth)
+                            {
+                                <tr @onclick="()=>SaveInfo(authGr)"
+                                    style="@((selectedRowId == authGr.group_id) ? "background-color:blue;color:white;" : "")">
+                                    <td>@authGr.group_id</td>
+                                    <td>@authGr.group_nm</td>                                    
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="popUpFooter">
+                <button @onclick="CloseModal">Cancle</button>
+                <button @onclick="OKbuttonClick">Ok</button>
+            </div>
+        </div>
+    </div>
+}
+
+
+
 @code {
     private List<AuthorizerGroupModel> _authorizersGroup = new List<AuthorizerGroupModel>();
     private AuthorizerGroupModel _authGroup = new AuthorizerGroupModel();
@@ -125,22 +171,29 @@
         _action = "ADD";
     }
 
+    #region get designatio list of bank
     private async Task GetDesignation()
     {
         designation = await _http.GetFromJsonAsync<List<string>>("AuthorizerGroup/GetDesignation");
     }
+    #endregion
 
     private async Task GetAuthorizerGroupData()
     {
+        await GetData();
+    }
+
+    private async Task GetData()
+    {
         _authorizersGroup = await _http.GetFromJsonAsync<List<AuthorizerGroupModel>>("AuthorizerGroup/GetAuthorizerGroup?group_id=" + _authGroup.group_id);
 
-        if(_authorizersGroup.Count > 0)
+        if (_authorizersGroup.Count > 0)
         {
-            var index = _authorizersGroup.Count-1;
+            var index = _authorizersGroup.Count - 1;
             _authGroup.group_nm = _authorizersGroup[index].group_nm;
             _authGroup.group_id = _authorizersGroup[index].group_id;
             _authGroup.authrizer_sl_no = index + 2;
-            foreach(var item in _authorizersGroup)
+            foreach (var item in _authorizersGroup)
             {
                 item.last_action = "EDT";
             }
@@ -192,4 +245,51 @@
             refreshBtnClick();
         }
     }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if(e.Key == "F8")
+        {
+            ShowPopUp();
+        }
+    }
+
+
+    #region popup model
+
+    private Boolean isPopUpShow = false;
+
+    List<AuthorizerGroupModel> _authAllGroupAuth = new List<AuthorizerGroupModel>();
+
+    private void CloseModal()
+    {
+        isPopUpShow = false;
+    }
+
+    private async Task ShowPopUp()
+    {
+        isPopUpShow = true;
+        _authAllGroupAuth = await _http.GetFromJsonAsync<List<AuthorizerGroupModel>>("AuthorizerGroup/GetAllAuthorizersGroup");
+
+    }
+
+    private AuthorizerGroupModel _objAuthGroupTemp = new AuthorizerGroupModel();
+
+    private int? selectedRowId;
+
+    private void SaveInfo(AuthorizerGroupModel authGroup)
+    {
+        selectedRowId = authGroup.group_id;
+        _objAuthGroupTemp = authGroup;
+    }
+
+    private async Task OKbuttonClick()
+    {
+        _authGroup.group_id = _objAuthGroupTemp.group_id;
+        selectedRowId = 0;
+        await GetData();
+        isPopUpShow = false;
+    }
+
+    #endregion
 }
