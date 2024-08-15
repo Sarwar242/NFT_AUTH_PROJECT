@@ -1,11 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ServerSideApplication.DbConnection;
 using ServerSideApplication.Service;
-<<<<<<< HEAD
 using ServerSideApplication.Service.EmployeeProfile;
-=======
 using ServerSideApplication.Service.AuthorizerGroup;
->>>>>>> dev
 
 var builder = WebApplication.CreateBuilder(args);
 
