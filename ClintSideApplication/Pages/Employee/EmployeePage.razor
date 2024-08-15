@@ -1,0 +1,121 @@
+﻿@page "/Employee-List"
+
+@inject NavigationManager NavManager
+@inject HttpClient _http
+
+<PageTitle>Employee List</PageTitle>
+<h3>Add Employee</h3>
+<EditForm Model="Model" OnValidSubmit="Submit" FormName="customer-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label>
+        Employee Name:
+        <InputText @bind-Value="Model!.EMPLOYEE_NAME" />
+    </label>
+    <br />
+    <label>
+        Branch Id :
+        <InputText @bind-Value="Model!.BRANCH_ID" />
+    </label>
+    <br />
+    <label>
+        Department :
+        <InputText @bind-Value="Model!.DEPARTMENT" />
+    </label>
+    <br />
+    <label>
+        Designation :
+        <InputNumber @bind-Value="Model!.DESIGNATION_ID" />
+    </label>
+    <br />
+    <label>
+        Joining Date:
+        <InputDate @bind-Value="Model!.JOINING_DT" />
+    </label>
+    <br />
+    <label>
+        Active Flag :
+        <InputNumber @bind-Value="Model!.ACTIVE_FLAG" />
+    </label>
+
+    <button type="submit">Submit</button>
+    <button type="button" @onclick="Back">Cancel</button>
+</EditForm>
+
+<br />
+<h1>Employee Information</h1>
+@if (Employes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Employee Id</th>
+                <th>Employee Name</th>
+                <th>Branch Id</th>
+                <th>Department</th>
+                <th>Designation Id</th>
+                <th>Joining Date</th>
+                <th>Active Flag</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Emp in Employes!)
+            {
+                <tr>
+                    <td>@Emp.EMPLOYEE_ID</td>
+                    <td>@Emp.EMPLOYEE_NAME</td>
+                    <td>@Emp.BRANCH_ID</td>
+                    <td>@Emp.DEPARTMENT</td>
+                    <td>@Emp.DESIGNATION_ID</td>
+                    <td>@Emp.JOINING_DT</td>
+                    <td>@Emp.ACTIVE_FLAG</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [SupplyParameterFromForm]
+    public Employee? Model { get; set; }
+    private List<Employee>? Employes;
+    protected override void OnInitialized() => Model ??= new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+        Employes = await _http.GetFromJsonAsync<List<Employee>>("api/EmployeeProfile");
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            var responce = await _http.PostAsJsonAsync("api/EmployeeProfile", Model);
+            var err_msg = await responce.Content.ReadAsStringAsync();
+
+            if (err_msg == "null" || string.IsNullOrEmpty(err_msg))
+            {
+                NavManager.NavigateTo("/Employee-List", true);
+            }
+            else
+            {
+                Console.WriteLine(err_msg);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    public void Back()
+    {
+        NavManager.NavigateTo("/", true);
+    }
+}

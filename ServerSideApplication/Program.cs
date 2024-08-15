@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ServerSideApplication.DbConnection;
 using ServerSideApplication.Service;
+using ServerSideApplication.Service.EmployeeProfile;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<AppDbConnection>(options =>
 
 builder.Services.AddScoped<IGroceryService, GroceryService>();
 builder.Services.AddScoped<IDesignationService, DesignationService>();
+builder.Services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
 
 builder.Services.AddCors(options =>
 {
