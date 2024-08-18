@@ -108,6 +108,7 @@
 
     <button class="btn btn-primary" @onclick="InsertDataIntoTable">Ok</button>
     <button class="btn btn-primary ms-2" @onclick="refreshBtnClick">Refresh</button>
+    <button class="btn btn-primary ms-2" @onclick="ShowPopUp">View</button>
 
 
 
@@ -136,7 +137,7 @@
                             @foreach (var authGr in _authAllGroupAuth)
                             {
                                 <tr @onclick="()=>SaveInfo(authGr)"
-                                    style="@((selectedRowId == authGr.group_id) ? "background-color:blue;color:white;" : "")">
+                                    style="@((selectedRowId == authGr.group_id) ? "background-color:blue;color:white;" : ""); cursor:pointer">
                                     <td>@authGr.group_id</td>
                                     <td>@authGr.group_nm</td>                                    
                                 </tr>
