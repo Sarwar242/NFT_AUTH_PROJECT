@@ -16,4 +16,8 @@
     <ProjectReference Include="..\ModelClasses\ModelClasses.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Service\NewFolder\" />
+  </ItemGroup>
+
 </Project>
