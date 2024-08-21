@@ -1,0 +1,116 @@
+﻿@page "/Authorize-Data"
+@using ModelClasses.NftAuth
+@inject HttpClient _http
+
+<h3>Get Data For Authorization</h3>
+
+<div>
+    <label>Select User</label>
+    <select @bind="userName" style="width:30%;" @bind:event="oninput" @onchange="chageTableName">
+        <option value="0">Select A User</option>
+        @foreach(var em in _employeeData)
+        {
+            <option value="@em.Designation_Id">@em.Designation_Name</option>
+        }
+    </select>
+</div>
+
+<br />
+<div>
+    <select style="width:50%;" @bind="functionId" @bind:event="oninput" @onchange="ClickFindBtn">
+        <option value="0">Select A Table</option>
+        @foreach (var em in _authTable)
+        {
+            <option value="@em.FUNCTION_ID">@em.FUNCTION_ID - @em.TABLE_NAME</option>
+        }
+    </select>
+    <button @onclick="ClickFindBtn">Find</button>
+</div>
+
+<div style="height:500px;">
+    @if (_authTableLog.Count != 0)
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Branch Id</th>
+                    <th>Function Id</th>
+                    <th>Queue Id</th>
+                    <th>Table Name</th>
+                    <th>Action Status</th>
+                    <th>Make By</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var data in _authTableLog)
+                {
+                    <tr>
+                        <td><input type="checkbox" value="@data.isCheck" /></td>
+                        <td>@data.BRANCH_ID</td>
+                        <td>@data.FUNCTION_ID</td>
+                        <td>@data.QUEUE_ID</td>
+                        <td>@data.TABLE_NAME</td>
+                        <td>@data.ACTION_STATUS</td>
+                        <td>@data.MAKE_BY</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div style="width:100%;text-align:center;">No Data Found</div>
+    }
+</div>
+<div class="d-flex">
+    <div style="width:60%">
+        <input type="text" placeholder="Reason For Decline/Authorization" style="width:90%" /><span style="color:red;">*</span>
+    </div>
+    <div style="width:38%;text-align:right;">
+        <button>Authorize</button>
+        <button>Decline</button>
+    </div>
+</div>
+
+@code {
+    private List<DesignationModel> _employeeData = new List<DesignationModel>();
+    private List<AuthLogModel> _authTable = new List<AuthLogModel>();
+    private List<AuthLogModel> _authTableLog = new List<AuthLogModel>();
+
+    private string userName = "0";
+    private string branchId = "0001";
+    private string functionId = "0";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEmployee();
+    }
+
+    private async Task GetEmployee()
+    {
+        _employeeData = await _http.GetFromJsonAsync<List<DesignationModel>>("AuthorizationProcess/GetAllEmployeeList");
+    }
+
+    private async Task GetTableName()
+    {
+        _authTable = await _http.GetFromJsonAsync<List<AuthLogModel>>($"AuthorizationProcess/GetLogTable?name={userName}&branch_id={branchId}");
+    }
+
+    private async Task ClickFindBtn()
+    {
+        _authTableLog = await _http.GetFromJsonAsync<List<AuthLogModel>>($"AuthorizationProcess/GetTableLogData?name={userName}&branch_id={branchId}&function_id={functionId}");
+        Console.WriteLine("Test Data Found");
+    }
+
+    private async Task chageTableName()
+    {
+        _authTableLog = new List<AuthLogModel>();
+        _authTable = new List<AuthLogModel>();
+
+        functionId = null;
+
+        await GetTableName();
+    }
+}
