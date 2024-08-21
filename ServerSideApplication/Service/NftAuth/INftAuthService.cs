@@ -4,5 +4,5 @@ namespace ServerSideApplication.Service.NftAuth;
 
 public interface INftAuthService
 {
-    Task CreateNftLog(List<NftAuthModel> NftAutLogList, string tableName);
+    Task<bool> CreateNftLog(List<NftAuthModel> NftAutLogList, string tableName);
 }
