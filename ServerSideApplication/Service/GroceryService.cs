@@ -105,8 +105,16 @@ namespace ServerSideApplication.Service
                         authLog.ACTION_STATUS = "ADD";
 
                         nftAuthLogList.Add(authLog);
-                        var stat = _nftAuthService.CreateNftLog(nftAuthLogList, "grocery_list_table");
-                        await transaction.CommitAsync();
+                        var stat = await _nftAuthService.CreateNftLog(nftAuthLogList, "grocery_list_table");
+                        if (stat)
+                        {
+                            await transaction.CommitAsync();
+                        }
+                        else
+                        {
+                            await transaction.RollbackAsync();
+                        }
+                        
                     }
                 }
             }
