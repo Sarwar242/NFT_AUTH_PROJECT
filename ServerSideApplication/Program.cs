@@ -4,6 +4,7 @@ using ServerSideApplication.Service;
 using ServerSideApplication.Service.EmployeeProfile;
 using ServerSideApplication.Service.AuthorizerGroup;
 using ServerSideApplication.Service.AuthorizationProcess;
+using ServerSideApplication.Service.NftAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IAuthorizerGroupService,AuthorizerGroupService>();
 builder.Services.AddScoped<IDesignationService, DesignationService>();
 builder.Services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
 builder.Services.AddScoped<IAuthorizationProcess, AuthorizationProcess>();
+builder.Services.AddScoped<INftAuthService, NftAuthService>();
 
 builder.Services.AddCors(options =>
 {

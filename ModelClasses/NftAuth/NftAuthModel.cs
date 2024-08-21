@@ -16,6 +16,7 @@ public class NftAuthModel
     public string? MAKE_BY { get; set; }
     public string? MAKE_DT { get; set; }
     public string? AUTH_1ST_BY { get; set; }
+    public string? AUTH_1ST_DT { get; set; }
     public string? AUTH_2ND_BY { get; set; }
     public string? AUTH_2ND_DT { get; set; }
     public bool PRIMARY_TABLE_FLAG { get; set; }
