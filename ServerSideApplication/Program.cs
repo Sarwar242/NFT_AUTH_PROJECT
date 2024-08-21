@@ -3,6 +3,7 @@ using ServerSideApplication.DbConnection;
 using ServerSideApplication.Service;
 using ServerSideApplication.Service.EmployeeProfile;
 using ServerSideApplication.Service.AuthorizerGroup;
+using ServerSideApplication.Service.AuthorizationProcess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IGroceryService, GroceryService>();
 builder.Services.AddScoped<IAuthorizerGroupService,AuthorizerGroupService>();
 builder.Services.AddScoped<IDesignationService, DesignationService>();
 builder.Services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
+builder.Services.AddScoped<IAuthorizationProcess, AuthorizationProcess>();
 
 builder.Services.AddCors(options =>
 {
