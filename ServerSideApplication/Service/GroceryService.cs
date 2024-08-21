@@ -4,16 +4,20 @@ using ServerSideApplication.DbConnection;
 using ModelClasses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ModelClasses.NftAuth;
+using ServerSideApplication.Service.NftAuth;
 
 namespace ServerSideApplication.Service
 {
     public class GroceryService : IGroceryService
     {
         private readonly AppDbConnection _connection;
+        private readonly INftAuthService _nftAuthService;
 
-        public GroceryService(AppDbConnection connection)
+        public GroceryService(AppDbConnection connection, INftAuthService nftAuthService)
         {
             _connection = connection;
+            _nftAuthService = nftAuthService;
         }
 
         public async Task<string> PostGroceryListData(GroceryList _groceryList)
@@ -21,7 +25,8 @@ namespace ServerSideApplication.Service
             string error_msg = "null";
             string error_code = "";
             string rowid = "";
-
+            var nftAuthLogList = new List<NftAuthModel>();
+            
             await using (var transaction = await _connection.Database.BeginTransactionAsync())
             {
                 await using (var command = _connection.Database.GetDbConnection().CreateCommand())
@@ -86,6 +91,21 @@ namespace ServerSideApplication.Service
                     }
                     else
                     {
+                        var authLog = new NftAuthModel();
+                        authLog.TABLE_NAME = "grocery_list_table";
+                        authLog.TABLE_ROWID = rowid;
+                        authLog.COLUMN_NAME = "";
+                        authLog.OLD_VALUE = "";
+                        authLog.NEW_VALUE = "";
+                        authLog.PRIMARY_TABLE_FLAG = true;
+                        authLog.FUNCTION_ID = "10201";
+                        authLog.DATA_TYPE = "string";
+                        authLog.BRANCH_ID = "0001";
+                        authLog.MAKE_BY = "Sarwar";
+                        authLog.ACTION_STATUS = "ADD";
+
+                        nftAuthLogList.Add(authLog);
+                        var stat = _nftAuthService.CreateNftLog(nftAuthLogList, "grocery_list_table");
                         await transaction.CommitAsync();
                     }
                 }

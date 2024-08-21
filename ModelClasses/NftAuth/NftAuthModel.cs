@@ -18,7 +18,7 @@ public class NftAuthModel
     public string? AUTH_1ST_BY { get; set; }
     public string? AUTH_2ND_BY { get; set; }
     public string? AUTH_2ND_DT { get; set; }
-    public string? PRIMARY_TABLE_FLAG { get; set; }
+    public bool PRIMARY_TABLE_FLAG { get; set; }
     public string? LOG_STATUS { get; set; }
     public string? REASON_DECLINE { get; set; }
     public string? DISPLAY_LABEL { get; set; }
