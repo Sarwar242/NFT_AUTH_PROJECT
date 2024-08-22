@@ -1,4 +1,4 @@
-﻿namespace ModelClasses.NftAuth;
+﻿namespace ModelClasses;
 
 public class NftAuthModel
 {

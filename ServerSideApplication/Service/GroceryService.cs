@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Oracle.ManagedDataAccess.Client;
+using Microsoft.EntityFrameworkCore.Storage;
 using ServerSideApplication.DbConnection;
 using ModelClasses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ModelClasses.NftAuth;
 using ServerSideApplication.Service.NftAuth;
+using Oracle.ManagedDataAccess.Client;
 
 namespace ServerSideApplication.Service
 {
@@ -26,9 +27,9 @@ namespace ServerSideApplication.Service
             string error_code = "";
             string rowid = "";
             var nftAuthLogList = new List<NftAuthModel>();
+
+            var transaction = await _connection.Database.BeginTransactionAsync();
             
-            await using (var transaction = await _connection.Database.BeginTransactionAsync())
-            {
                 await using (var command = _connection.Database.GetDbConnection().CreateCommand())
                 {
                     command.CommandText = "Packege_Monaem.Grocery_List_I";
@@ -105,7 +106,7 @@ namespace ServerSideApplication.Service
                         authLog.ACTION_STATUS = "ADD";
 
                         nftAuthLogList.Add(authLog);
-                        var stat = await _nftAuthService.CreateNftLog(nftAuthLogList, "grocery_list_table");
+                        var stat = await _nftAuthService.CreateNftLog(nftAuthLogList, "grocery_list_table", transaction);
                         if (stat)
                         {
                             await transaction.CommitAsync();
@@ -117,7 +118,6 @@ namespace ServerSideApplication.Service
                         
                     }
                 }
-            }
 
             return error_msg;
         }
