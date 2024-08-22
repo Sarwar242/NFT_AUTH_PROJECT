@@ -93,20 +93,21 @@ namespace ServerSideApplication.Service
                     else
                     {
                         var authLog = new NftAuthModel();
-                        authLog.TABLE_NAME = "grocery_list_table";
+                        authLog.TABLE_NAME = "GROCERY_LIST_TABLE";
                         authLog.TABLE_ROWID = rowid;
                         authLog.COLUMN_NAME = "";
                         authLog.OLD_VALUE = "";
                         authLog.NEW_VALUE = "";
                         authLog.PRIMARY_TABLE_FLAG = true;
                         authLog.FUNCTION_ID = "10201";
-                        authLog.DATA_TYPE = "string";
+                        authLog.DATA_TYPE = "NVARCHAR2";
                         authLog.BRANCH_ID = "0001";
                         authLog.MAKE_BY = "Sarwar";
                         authLog.ACTION_STATUS = "ADD";
+                        authLog.REMARKS = "New Grocery Added. RowId: "+ rowid;
 
                         nftAuthLogList.Add(authLog);
-                        var stat = await _nftAuthService.CreateNftLog(nftAuthLogList, "grocery_list_table", transaction);
+                        var stat = await _nftAuthService.CreateNftLog(nftAuthLogList, "GROCERY_LIST_TABLE", transaction);
                         if (stat)
                         {
                             await transaction.CommitAsync();
