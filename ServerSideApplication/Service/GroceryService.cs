@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using ServerSideApplication.DbConnection;
 using ModelClasses;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ModelClasses.NftAuth;
 using ServerSideApplication.Service.NftAuth;
 using Oracle.ManagedDataAccess.Client;
 
@@ -71,21 +67,21 @@ namespace ServerSideApplication.Service
                     var err_msg = new OracleParameter("p_error_msg", OracleDbType.NVarchar2)
                     {
                         Direction = System.Data.ParameterDirection.Output,
-                        Size = 2000 // Adjust size according to expected length
+                        Size = 2000
                     };
                     command.Parameters.Add(err_msg);
 
                     var err_code = new OracleParameter("p_error_code", OracleDbType.NVarchar2)
                     {
                         Direction = System.Data.ParameterDirection.Output,
-                        Size = 2000 // Adjust size according to expected length
+                        Size = 20
                     };
                     command.Parameters.Add(err_code);
 
                     var v_rowid = new OracleParameter("v_rowId", OracleDbType.NVarchar2)
                     {
                         Direction = System.Data.ParameterDirection.Output,
-                        Size = 2000 // Adjust size according to expected length
+                        Size = 200
                     };
                     command.Parameters.Add(v_rowid);
 
@@ -94,7 +90,7 @@ namespace ServerSideApplication.Service
                     error_msg = err_msg.Value?.ToString() ?? "null";
                     error_code = err_code.Value?.ToString() ?? "";
                     rowid = v_rowid.Value?.ToString() ?? "";
-                item_id = grocery_id.Value?.ToString()??"";
+                    item_id = grocery_id.Value?.ToString()??"";
 
                     if (!string.IsNullOrEmpty(error_msg) && error_msg != "null")
                     {
@@ -112,9 +108,9 @@ namespace ServerSideApplication.Service
                         authLog.FUNCTION_ID = "10201";
                         authLog.DATA_TYPE = "NVARCHAR2";
                         authLog.BRANCH_ID = "0001";
-                        authLog.MAKE_BY = "Sarwar";
+                        authLog.MAKE_BY = _groceryList.Make_By;
                         authLog.ACTION_STATUS = "ADD";
-                        authLog.REMARKS = "New Grocery Added. RowId: "+ rowid;
+                        authLog.REMARKS = "New Grocery Added. Id: "+ item_id;
 
                         nftAuthLogList.Add(authLog);
                         var stat = await _nftAuthService.CreateNftLog(nftAuthLogList, "GROCERY_LIST_TABLE", transaction);
