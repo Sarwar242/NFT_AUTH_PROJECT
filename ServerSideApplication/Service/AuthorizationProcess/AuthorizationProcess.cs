@@ -93,28 +93,36 @@ namespace ServerSideApplication.Service.AuthorizationProcess
             List<AuthLogModel> nftAuthlogTableList = new List<AuthLogModel>();
             await using (var command = _connection.Database.GetDbConnection().CreateCommand())
             {
-                command.CommandText = "Packege_Monaem.unAuth_table_log_list";
+                //command.CommandText = "Packege_Monaem.unAuth_table_log_list";
+                command.CommandText = "nft_auth_test_pck.nft_authorz_log_gk";
+
                 command.CommandType = System.Data.CommandType.StoredProcedure;
 
-                command.Parameters.Add(new OracleParameter("p_branch_id", OracleDbType.NVarchar2)
+                command.Parameters.Add(new OracleParameter("pbranch_id", OracleDbType.NVarchar2)
                 {
                     Direction = System.Data.ParameterDirection.Input,
                     Value = branch_id
                 });
 
-                command.Parameters.Add(new OracleParameter("p_user_id", OracleDbType.NVarchar2)
+                command.Parameters.Add(new OracleParameter("puser_id", OracleDbType.NVarchar2)
                 {
                     Direction = System.Data.ParameterDirection.Input,
                     Value = name
                 });
 
-                command.Parameters.Add(new OracleParameter("p_function_id", OracleDbType.NVarchar2)
+                command.Parameters.Add(new OracleParameter("pfunction", OracleDbType.NVarchar2)
                 {
                     Direction = System.Data.ParameterDirection.Input,
                     Value = functionId
                 });
+                
+                command.Parameters.Add(new OracleParameter("plog_status", OracleDbType.NVarchar2)
+                {
+                    Direction = System.Data.ParameterDirection.Input,
+                    Value = "U"
+                });
 
-                command.Parameters.Add(new OracleParameter("p_cursor", OracleDbType.RefCursor)
+                command.Parameters.Add(new OracleParameter("psms_nft_authorz_log_cursor", OracleDbType.RefCursor)
                 {
                     Direction = System.Data.ParameterDirection.Output
                 });
@@ -130,6 +138,7 @@ namespace ServerSideApplication.Service.AuthorizationProcess
                             BRANCH_ID = reader["branch_id"].ToString(),
                             QUEUE_ID = reader["queue_id"].ToString(),
                             FUNCTION_ID = reader["function_id"].ToString(),
+                            LOG_STATUS = reader["log_status"].ToString(),
                             TABLE_NAME = reader["table_name"].ToString(),
                             ACTION_STATUS = reader["action_status"].ToString(),
                             MAKE_BY = reader["make_by"].ToString()
