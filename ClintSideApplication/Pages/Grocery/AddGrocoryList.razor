@@ -4,7 +4,17 @@
 @inject NavigationManager _navigation
 
 <h3>AddGroceryList</h3>
-
+<div>
+    <label>Select User</label>
+    <select @bind="userName" style="width:30%;">
+        <option value="0">Select A User</option>
+        @foreach (var em in _employeeData)
+        {
+            <option value="@em.Designation_Id">@em.Designation_Name</option>
+        }
+    </select>
+</div>
+<br />
 <div class="w-50">
     <div class="form-floating mb-3">
         <input type="text" class="form-control" id="floatingInput" placeholder="Item Name" @bind="_grocery.Item_Name">
@@ -19,11 +29,23 @@
 
 @code {
     private GroceryList _grocery = new GroceryList();
+    private List<DesignationModel> _employeeData = new List<DesignationModel>();
+    private string userName = "0";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEmployee();
+    }
+
+    private async Task GetEmployee()
+    {
+        _employeeData = await _http.GetFromJsonAsync<List<DesignationModel>>("AuthorizationProcess/GetAllEmployeeList");
+    }
 
     private async Task AddGroceryData()
     {
         _grocery.Action_Status = "ADD";
-        _grocery.Make_By = "monaem.khan";
+        _grocery.Make_By = userName;
         _grocery.Item_Id = "";
         _grocery.Make_Date = "";
 
@@ -39,6 +61,5 @@
         {
             Console.WriteLine(err_msg);
         }
-
     }
 }
