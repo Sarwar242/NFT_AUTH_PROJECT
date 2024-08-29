@@ -132,6 +132,7 @@ namespace ServerSideApplication.Service.AuthorizationProcess
                             FUNCTION_ID = reader["function_id"].ToString(),
                             TABLE_NAME = reader["table_name"].ToString(),
                             ACTION_STATUS = reader["action_status"].ToString(),
+                            REMARKS = reader["remarks"].ToString(),
                             MAKE_BY = reader["make_by"].ToString()
                         });
                     }

@@ -38,6 +38,7 @@
                     <th>Queue Id</th>
                     <th>Table Name</th>
                     <th>Action Status</th>
+                    <th>Remarks</th>
                     <th>Make By</th>
                     <th>Reason</th>
                 </tr>
@@ -51,9 +52,10 @@
                         <td>@data.QUEUE_ID</td>
                         <td>@data.TABLE_NAME</td>
                         <td>@data.ACTION_STATUS</td>
+                        <td>@data.REMARKS</td>
                         <td>@data.MAKE_BY</td>
                         <td>
-                            <input type="text" @bind="@data.reason" />
+                            <input type="text" @bind="@data.REASON" />
                         </td>
                         <td>
                             <a @onclick="()=>AuthorizeLogData(data)" style="cursor:pointer;">

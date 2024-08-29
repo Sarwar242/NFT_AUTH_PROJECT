@@ -26,6 +26,7 @@ namespace ServerSideApplication.Service
             string error_msg = "null";
             string error_code = "";
             string rowid = "";
+            string item_id = "";
             var nftAuthLogList = new List<NftAuthModel>();
 
             var transaction = await _connection.Database.BeginTransactionAsync();
@@ -35,7 +36,15 @@ namespace ServerSideApplication.Service
                     command.CommandText = "Packege_Monaem.Grocery_List_I";
                     command.CommandType = System.Data.CommandType.StoredProcedure;
 
-                    command.Parameters.Add(new OracleParameter("p_grocery_name", OracleDbType.NVarchar2)
+                var grocery_id = new OracleParameter("p_grocery_id", OracleDbType.NVarchar2)
+                {
+                    Direction = System.Data.ParameterDirection.Output,
+                    Size = 2000
+                };
+
+                    command.Parameters.Add(grocery_id);
+
+                command.Parameters.Add(new OracleParameter("p_grocery_name", OracleDbType.NVarchar2)
                     {
                         Direction = System.Data.ParameterDirection.Input,
                         Value = _groceryList.Item_Name
@@ -85,6 +94,7 @@ namespace ServerSideApplication.Service
                     error_msg = err_msg.Value?.ToString() ?? "null";
                     error_code = err_code.Value?.ToString() ?? "";
                     rowid = v_rowid.Value?.ToString() ?? "";
+                item_id = grocery_id.Value?.ToString()??"";
 
                     if (!string.IsNullOrEmpty(error_msg) && error_msg != "null")
                     {

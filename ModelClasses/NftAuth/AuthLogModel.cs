@@ -13,7 +13,8 @@ namespace ModelClasses.NftAuth
         public string? FUNCTION_ID { get; set; }
         public string? TABLE_NAME { get; set; }
         public string? ACTION_STATUS { get; set; }
+        public string? REMARKS {get; set;}
         public string? MAKE_BY { get; set; }
-        public string? reason { get; set; }
+        public string? REASON { get; set; }
     }
 }
