@@ -12,8 +12,9 @@ namespace ModelClasses
         public string? EMPLOYEE_NAME { get; set; }
         public string? BRANCH_ID { get; set; }
         public string? DEPARTMENT { get; set; }
-        public int DESIGNATION_ID  { get; set; }
+        public string? DESIGNATION_NAME { get; set; }
+        public int? DESIGNATION_ID  { get; set; }
         public DateTime JOINING_DT { get; set; }
-        public int ACTIVE_FLAG { get;set; }
+        public bool ACTIVE_FLAG { get;set; }
     }
 }

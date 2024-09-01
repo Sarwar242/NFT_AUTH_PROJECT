@@ -10,34 +10,49 @@
     <ValidationSummary />
     <label>
         Employee Name:
+        <br />
         <InputText @bind-Value="Model!.EMPLOYEE_NAME" />
     </label>
     <br />
     <label>
         Branch Id :
+        <br />
         <InputText @bind-Value="Model!.BRANCH_ID" />
     </label>
     <br />
     <label>
         Department :
+        <br />
         <InputText @bind-Value="Model!.DEPARTMENT" />
     </label>
     <br />
-    <label>
+   @*  <label>
         Designation ID :
         <InputNumber @bind-Value="Model!.DESIGNATION_ID" />
+    </label> *@
+    <label>
+        Designation ID :
+        <br />
+        <select style="width:100%; height:25px;" @bind="Model!.DESIGNATION_ID">
+            <option value="">Select Designation</option>
+            @foreach (var _desig in designations)
+            {
+                <option value="@_desig.Designation_Id">@_desig.Designation_Name</option>
+            }
+        </select>
     </label>
     <br />
     <label>
         Joining Date:
+        <br />
         <InputDate @bind-Value="Model!.JOINING_DT" />
     </label>
     <br />
     <label>
-        Active Flag :
-        <InputNumber @bind-Value="Model!.ACTIVE_FLAG" />
+        <InputCheckbox @bind-Value="Model!.ACTIVE_FLAG"/> Active Status
     </label>
-
+   
+    <br />
     <button type="submit">Submit</button>
     <button type="button" @onclick="Back">Cancel</button>
 </EditForm>
@@ -86,12 +101,15 @@ else
     private List<Employee>? Employes;
     protected override void OnInitialized() => Model ??= new();
 
+    private List<DesignationModel>? designations;
+
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(500);
         Employes = await _http.GetFromJsonAsync<List<Employee>>("api/EmployeeProfile");
+        designations = await _http.GetFromJsonAsync<List<DesignationModel>>("api/Designation");
     }
-
+   
     private async Task Submit()
     {
         try
@@ -113,7 +131,7 @@ else
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
-
+  
     public void Back()
     {
         NavManager.NavigateTo("/", true);

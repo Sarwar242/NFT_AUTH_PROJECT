@@ -44,7 +44,7 @@ namespace ServerSideApplication.Service.EmployeeProfile
                                 DEPARTMENT = result["DEPARTMENT"].ToString(),
                                 DESIGNATION_ID = Convert.ToInt32(result["DESIGNATION_ID"].ToString()),
                                 JOINING_DT = Convert.ToDateTime(result["JOINING_DT"].ToString()),
-                                ACTIVE_FLAG = Convert.ToInt32(result["ACTIVE_FLAG"].ToString())
+                                ACTIVE_FLAG = Convert.ToBoolean(result["ACTIVE_FLAG"])
                             });
                         }
                     }
