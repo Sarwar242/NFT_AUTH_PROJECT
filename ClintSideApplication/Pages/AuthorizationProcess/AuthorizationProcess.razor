@@ -113,7 +113,6 @@
     private async Task ClickFindBtn()
     {
         _authTableLog = await _http.GetFromJsonAsync<List<AuthLogModel>>($"AuthorizationProcess/GetTableLogData?name={userName}&branch_id={branchId}&function_id={functionId}");
-        Console.WriteLine("Test Data Found");
     }
 
     private async Task chageTableName()
