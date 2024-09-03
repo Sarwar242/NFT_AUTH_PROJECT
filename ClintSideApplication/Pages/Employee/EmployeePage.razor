@@ -35,7 +35,7 @@
         <br />
         <select style="width:100%; height:25px;" @bind="Model!.DESIGNATION_ID">
             <option value="">Select Designation</option>
-            @foreach (var _desig in designations)
+            @foreach (var _desig in designations!)
             {
                 <option value="@_desig.Designation_Id">@_desig.Designation_Name</option>
             }
@@ -101,7 +101,7 @@ else
     private List<Employee>? Employes;
     protected override void OnInitialized() => Model ??= new();
 
-    private List<DesignationModel>? designations;
+    private List<DesignationModel>? designations =new List<DesignationModel>();
 
     protected override async Task OnInitializedAsync()
     {
