@@ -127,7 +127,7 @@ namespace ServerSideApplication.Service.AuthorizerGroup
                         {
                             group_id = Convert.ToInt32(reader["group_id"].ToString()),
                             group_nm = reader["group_nm"].ToString(),
-                            designation_nm = reader["designation_nm"].ToString(),
+                            designation_nm = reader["designation_name"].ToString(),
                             desig_override_auth_flag = Convert.ToInt32(reader["desig_override_auth_flag"].ToString()),
                             make_by = reader["make_by"].ToString(),
                             authrizer_sl_no = Convert.ToInt32(reader["authrizer_sl_no"].ToString())

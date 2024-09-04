@@ -136,7 +136,7 @@
                         <tbody>
                             @foreach (var authGr in _authAllGroupAuth)
                             {
-                                <tr @onclick="()=>SaveInfo(authGr)"
+                                <tr @onclick="()=>SaveInfo(authGr)" @ondblclick="OKbuttonClick"
                                     style="@((selectedRowId == authGr.group_id) ? "background-color:blue;color:white;" : ""); cursor:pointer">
                                     <td>@authGr.group_id</td>
                                     <td>@authGr.group_nm</td>                                    
@@ -147,7 +147,7 @@
                 </div>
             </div>
             <div id="popUpFooter">
-                <button @onclick="CloseModal">Cancle</button>
+                <button @onclick="CloseModal">Cancel</button>
                 <button @onclick="OKbuttonClick">Ok</button>
             </div>
         </div>
