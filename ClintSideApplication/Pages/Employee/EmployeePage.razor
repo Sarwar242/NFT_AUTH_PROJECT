@@ -4,8 +4,14 @@
 @inject HttpClient _http
 
 <PageTitle>Employee List</PageTitle>
-<h3>Add Employee</h3>
-<EditForm Model="Model" OnValidSubmit="Submit" FormName="customer-form">
+<div class="row">
+    <div class="col-3">
+        <h3 class="bg-success rounded text-white px-3">Add Employee</h3>
+    </div>
+    
+</div>
+
+<EditForm Model="Model" OnValidSubmit="Submit" class="form-control" FormName="customer-form">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <label>
@@ -53,19 +59,27 @@
     </label>
    
     <br />
-    <button type="submit">Submit</button>
-    <button type="button" @onclick="Back">Cancel</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-secondary" @onclick="Back">Cancel</button>
 </EditForm>
 
 <br />
-<h1>Employee Information</h1>
+<hr/>
+
+<div class="row">
+    <div class="col-4">
+        <h3 class="bg-success rounded text-white px-3">Employee Information</h3>
+    </div>
+
+</div>
+
 @if (Employes == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Employee Id</th>
