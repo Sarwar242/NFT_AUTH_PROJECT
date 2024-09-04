@@ -35,7 +35,7 @@
                 <tr>
                     <th>Branch Id</th>
                     <th>Function Id</th>
-                    <th>Queue Id</th>
+                    @* <th>Queue Id</th> *@
                     <th>Table Name</th>
                     <th>Action Status</th>
                     <th>Remarks</th>
@@ -49,13 +49,13 @@
                     <tr>
                         <td>@data.BRANCH_ID</td>
                         <td>@data.FUNCTION_ID</td>
-                        <td>@data.QUEUE_ID</td>
+                       @*  <td>@data.QUEUE_ID</td> *@
                         <td>@data.TABLE_NAME</td>
                         <td>@data.ACTION_STATUS</td>
                         <td>@data.REMARKS</td>
                         <td>@data.MAKE_BY</td>
                         <td>
-                            <input type="text" @bind="@data.REASON" />
+                            <input type="text" style="@(data.QUEUE_ID == queueId ? "border: 1px solid red;" : "")" @bind="@data.REASON" @onfocus="remove" />
                         </td>
                         <td>
                             <a class="btn btn-primary" @onclick="()=>AuthorizeLogData(data)" style="cursor:pointer;">
@@ -76,6 +76,10 @@
         <div style="width:100%;text-align:center;">No Data Found</div>
     }
 </div>
+
+<div style="text-align:center; color: red">
+    @error
+</div>
 @* <div class="d-flex">
     <div style="width:60%">
         <input type="text" placeholder="Reason For Decline/Authorization" style="width:90%" /><span style="color:red;">*</span>
@@ -94,6 +98,9 @@
     private string userName = "0";
     private string branchId = "0001";
     private string functionId = "0";
+
+    private string queueId = "";
+    private string error = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -121,23 +128,47 @@
         _authTable = new List<AuthLogModel>();
 
         functionId = null;
+        queueId = "";
 
         await GetTableName();
     }
 
     private async Task AuthorizeLogData(AuthLogModel _data)
     {
-        var responce = await _http.PostAsJsonAsync($"AuthorizationProcess/AuthorizeDecline?"+
-        $"name={userName}&authStatus={"A"}&overrideflag={"0"}&designationOverride={"0"}", _data);
+        if (_data.MAKE_BY != userName)
+        {
+            if (!string.IsNullOrEmpty(_data.REASON))
+            {
+                var responce = await _http.PostAsJsonAsync($"AuthorizationProcess/AuthorizeDecline?" +
+            $"name={userName}&authStatus={"A"}&overrideflag={"0"}&designationOverride={"0"}", _data);
 
-        await ClickFindBtn();
+                await ClickFindBtn();
+            }
+            else
+            {
+                queueId = _data.QUEUE_ID;
+            }
+        }
+        else
+        {
+            error = "Same User Can Not Authorize !";
+
+            await Task.Delay(3000);
+
+            error = "";
+        }
     }
 
     private async Task DeclineLogData(AuthLogModel _data)
     {
-        var responce = await _http.PostAsJsonAsync($"AuthorizationProcess/AuthorizeDecline?" +
-        $"name={userName}&authStatus={"D"}&overrideflag={"0"}&designationOverride={"0"}", _data);
+        // var responce = await _http.PostAsJsonAsync($"AuthorizationProcess/AuthorizeDecline?" +
+        // $"name={userName}&authStatus={"D"}&overrideflag={"0"}&designationOverride={"0"}", _data);
 
-        await ClickFindBtn();
+        // await ClickFindBtn();
+    }
+
+    private void remove()
+    {
+        queueId = "";
     }
 }
