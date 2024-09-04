@@ -42,5 +42,14 @@ namespace ServerSideApplication.Controllers.AuthorizationProcess
             _list = await _authorizationProcess.GetAuthLogTableDataList(name, branch_id, function_id);
             return Ok(_list);
         }
+
+        [HttpPost]
+        [Route("AuthorizeDecline")]
+        public async Task<string> PostAuthDeclineLog(AuthLogModel _logData, string name,string authStatus,string overrideflag,string designationOverride)
+        {
+            var error_msg = "";
+            error_msg = await _authorizationProcess.PostAuthDecline(_logData, name,authStatus,overrideflag,designationOverride);
+            return error_msg;
+        }
     }
 }

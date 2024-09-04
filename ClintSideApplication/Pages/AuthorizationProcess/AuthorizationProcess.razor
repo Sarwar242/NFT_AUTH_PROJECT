@@ -58,10 +58,10 @@
                             <input type="text" @bind="@data.REASON" />
                         </td>
                         <td>
-                            <a @onclick="()=>AuthorizeLogData(data)" style="cursor:pointer;">
+                            <a class="btn btn-primary" @onclick="()=>AuthorizeLogData(data)" style="cursor:pointer;">
                                 Authorize
                             </a>/
-                            <a>
+                            <a class="btn btn-primary" @onclick="()=>DeclineLogData(data)">
                                 Decline
                             </a>
                         </td>
@@ -125,8 +125,19 @@
         await GetTableName();
     }
 
-    private void AuthorizeLogData(AuthLogModel _data)
+    private async Task AuthorizeLogData(AuthLogModel _data)
     {
-        // authorization logic will be here
+        var responce = await _http.PostAsJsonAsync($"AuthorizationProcess/AuthorizeDecline?"+
+        $"name={userName}&authStatus={"A"}&overrideflag={"0"}&designationOverride={"0"}", _data);
+
+        await ClickFindBtn();
+    }
+
+    private async Task DeclineLogData(AuthLogModel _data)
+    {
+        var responce = await _http.PostAsJsonAsync($"AuthorizationProcess/AuthorizeDecline?" +
+        $"name={userName}&authStatus={"D"}&overrideflag={"0"}&designationOverride={"0"}", _data);
+
+        await ClickFindBtn();
     }
 }
