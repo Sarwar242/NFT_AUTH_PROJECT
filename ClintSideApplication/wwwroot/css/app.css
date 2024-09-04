@@ -98,6 +98,59 @@ a, .btn-link {
         content: var(--blazor-load-percentage-text, "Loading");
     }
 
+
+.gradient-background {
+    background: linear-gradient(to right,rgb(5, 39, 103), #3a0647);
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+}
+
+/* Variations */
+.gradient-vertical {
+    background: linear-gradient(to bottom, #4158D0, #C850C0);
+}
+
+.gradient-diagonal {
+    background: linear-gradient(to bottom right, #00F260, #0575E6);
+}
+
+.gradient-radial {
+    background: radial-gradient(circle, #ff00cc, #333399);
+}
+
+/* Animated gradient */
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.gradient-animated {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient-animation 15s ease infinite;
+}
+
+/* New gradient with specified colors */
+.gradient-deep-blue-purple {
+    background: linear-gradient(to right, rgb(5, 39, 103), #3a0647);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 code {
     color: #c02d76;
 }
