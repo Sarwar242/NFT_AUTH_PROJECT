@@ -4,25 +4,38 @@
 @inject HttpClient _http
 
 <PageTitle>Designations</PageTitle>
-<h3>Add Designation</h3>
-<EditForm Model="Model" OnValidSubmit="Submit" FormName="customer-form">
+
+<div class="row">
+    <div class="col">
+        <h3 class="gradient-background rounded text-white px-3">Add Designation</h3>
+    </div>
+
+</div>
+
+<EditForm Model="Model" OnValidSubmit="Submit" class="form-control d-flex align-items-center" FormName="customer-form">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <label>
-        Designation Name:
+    <label class="pe-1">
+        Designation Name: &nbsp;
         <InputText @bind-Value="Model!.Designation_Name" />
     </label>
-    <label>
-        Designation Priority:
+        <label class="pe-1">
+        Designation Priority: &nbsp;
         <InputText @bind-Value="Model!.Designation_Priority" />
     </label>
 
-    <button type="submit">Submit</button>
-    <button type="button" @onclick="Back">Cancel</button>
+    <button type="submit" class="btn btn-sm btn-outline-success me-1">Submit</button>
+    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="Back">Home</button>
 </EditForm>
 
 <br />
-<h1>Designations</h1>
+<div class="row pt-3">
+    <div class="col">
+        <h3 class="gradient-background rounded text-white px-3">Designations</h3>
+    </div>
+
+</div>
+
 @if (designations == null)
 {
     <p><em>Loading...</em></p>
@@ -32,16 +45,16 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Designation Id</th>
-                <th>Designation Name</th>
-                <th>Designation Priority</th>
+                <th scope="col">Designation Id</th>
+                <th scope ="col">Designation Name</th>
+                <th scope="col">Designation Priority</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var designation in designations!)
             {
                 <tr>
-                    <td>@designation.Designation_Id</td>
+                    <td scope ="row">@designation.Designation_Id</td>
                     <td>@designation.Designation_Name</td>
                     <td>@designation.Designation_Priority</td>
                 </tr>
