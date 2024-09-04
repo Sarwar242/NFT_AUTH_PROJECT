@@ -4,8 +4,15 @@
 @inject HttpClient _http
 
 <PageTitle>Designations</PageTitle>
-<h3>Add Designation</h3>
-<EditForm Model="Model" OnValidSubmit="Submit" FormName="customer-form">
+
+<div class="row">
+    <div class="col">
+        <h3 class="bg-success rounded text-white px-3">Add Designation</h3>
+    </div>
+
+</div>
+
+<EditForm Model="Model" OnValidSubmit="Submit" class="form-control" FormName="customer-form">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <label>
@@ -17,19 +24,25 @@
         <InputText @bind-Value="Model!.Designation_Priority" />
     </label>
 
-    <button type="submit">Submit</button>
-    <button type="button" @onclick="Back">Cancel</button>
+    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="button" class="btn btn-secondary" @onclick="Back">Home</button>
 </EditForm>
 
 <br />
-<h1>Designations</h1>
+<div class="row">
+    <div class="col">
+        <h3 class="bg-success rounded text-white px-3">Designations</h3>
+    </div>
+
+</div>
+
 @if (designations == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Designation Id</th>
